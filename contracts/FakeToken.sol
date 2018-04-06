@@ -1,7 +1,6 @@
 pragma solidity ^0.4.21;
 
 import "./BasicToken.sol";
-import "./SafeMath.sol";
 
 contract FakeToken is BasicToken {
 
