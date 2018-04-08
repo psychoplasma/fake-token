@@ -1,11 +1,11 @@
 pragma solidity ^0.4.21;
 
-import "./ERC20Interface.sol";
-import "./utils/SaferMath.sol";
+import "../interface/ERC20Interface.sol";
+import "../utils/SafeMath.sol";
 
 
 contract BasicToken is ERC20Interface {
-    using SaferMath for uint256;
+    using SafeMath for uint256;
 
     uint256 constant private MAX_UINT256 = 2**256 - 1;
     uint256 totalTokenSupply;
