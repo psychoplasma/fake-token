@@ -3,7 +3,6 @@ pragma solidity ^0.4.21;
 import "./BasicToken.sol";
 
 contract FakeToken is BasicToken {
-
     string public name;    
     string public symbol;      
     uint8 public decimals;
