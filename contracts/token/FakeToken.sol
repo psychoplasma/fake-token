@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.19;
 
 import "./BasicToken.sol";
 
@@ -6,6 +6,7 @@ contract FakeToken is BasicToken {
     string public name;    
     string public symbol;      
     uint8 public decimals;
+    address public ownerAccount;
 
     function FakeToken(
         uint256 _initialAmount,
@@ -13,6 +14,7 @@ contract FakeToken is BasicToken {
         uint8 _decimalUnits,
         string _tokenSymbol
     ) public {
+        ownerAccount = msg.sender;
         balances[msg.sender] = _initialAmount;       // Give the creator all initial tokens
         totalTokenSupply = _initialAmount;           // Update total supply
         name = _tokenName;                           // Set the name for display purposes
@@ -23,5 +25,15 @@ contract FakeToken is BasicToken {
     /// @notice Reject any ether sent to this contract address
     function () external {
         revert();
+    }
+
+    function getOwnerAccount() external returns (address owner) {
+        return ownerAccount;
+    }
+
+    function changeOwner(address newOwner) public {
+        require(ownerAccount == msg.sender);
+        transfer(newOwner, balances[ownerAccount]);
+        ownerAccount = newOwner;
     }
 }

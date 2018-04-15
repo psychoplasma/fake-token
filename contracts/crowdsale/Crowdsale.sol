@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.19;
 
 import "../token/FakeToken.sol";
 import "../utils/SafeMath.sol";
@@ -29,13 +29,13 @@ contract Crowdsale {
         uint fundingGoalInEthers,
         uint durationInMinutes,
         uint etherCostOfFakeToken,
-        address addressOfFakeToken
+        address rewardTokenAddress
     ) public {
         beneficiary = ifSuccessfulSendTo;
         fundingGoal = fundingGoalInEthers * 1 ether;
         deadline = now + durationInMinutes * 1 minutes;
         price = etherCostOfFakeToken * 1 ether;
-        tokenReward = FakeToken(addressOfFakeToken);
+        tokenReward = FakeToken(rewardTokenAddress);
     }
 
     /**
@@ -50,7 +50,7 @@ contract Crowdsale {
         balanceOf[msg.sender] = balanceOf[msg.sender].add(amount);
         amountRaised = amountRaised.add(amount);
         tokenReward.transfer(msg.sender, amount.div(price));
-        emit FundTransfer(msg.sender, amount, true);
+        FundTransfer(msg.sender, amount, true);
     }
 
     modifier afterDeadline() { 
@@ -66,7 +66,7 @@ contract Crowdsale {
     function checkGoalReached() public afterDeadline {
         if (amountRaised >= fundingGoal) {
             fundingGoalReached = true;
-            emit GoalReached(beneficiary, amountRaised);
+            GoalReached(beneficiary, amountRaised);
         }
         crowdsaleClosed = true;
     }
@@ -86,7 +86,7 @@ contract Crowdsale {
             balanceOf[msg.sender] = 0;
             if (amount > 0) {
                 if (msg.sender.send(amount)) {
-                    emit FundTransfer(msg.sender, amount, false);
+                    FundTransfer(msg.sender, amount, false);
                 } else {
                     balanceOf[msg.sender] = amount;
                 }
@@ -95,7 +95,7 @@ contract Crowdsale {
 
         if (fundingGoalReached && beneficiary == msg.sender) {
             if (beneficiary.send(amountRaised)) {
-                emit FundTransfer(beneficiary, amountRaised, false);
+                FundTransfer(beneficiary, amountRaised, false);
             } else {
                 //If we fail to send the funds to beneficiary, unlock funders balance
                 fundingGoalReached = false;
