@@ -7,7 +7,7 @@ module.exports = function(deployer) {
       Crowdsale, 
       "0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef",
       3000,
-      10,
+      30,
       1,
       FakeToken.address);
   });
