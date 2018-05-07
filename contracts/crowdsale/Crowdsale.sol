@@ -18,7 +18,6 @@ contract Crowdsale {
 
     event GoalReached(address recipient, uint totalAmountRaised);
     event FundTransfer(address funder, uint amount, bool isContribution);
-    event LogFallback(string message);
 
     /**
      * Constructor function
@@ -35,7 +34,7 @@ contract Crowdsale {
         beneficiary = ifSuccessfulSendTo;
         fundingGoal = fundingGoalInEthers * 1 ether;
         deadline = now + durationInMinutes * 1 minutes;
-        price = etherCostOfFakeToken * 1 ether;
+        price = 1 ether / etherCostOfFakeToken;
         tokenReward = FakeToken(rewardTokenAddress);
     }
 
@@ -46,9 +45,7 @@ contract Crowdsale {
      * that is called whenever anyone sends funds to a contract
      */
     function () external payable {
-        LogFallback("Fallback function called");
         require(!crowdsaleClosed);
-        LogFallback("Crowdsale is not closed yet");
         uint amount = msg.value;
         balanceOf[msg.sender] = balanceOf[msg.sender].add(amount);
         amountRaised = amountRaised.add(amount);
